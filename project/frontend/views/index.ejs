@@ -1,0 +1,85 @@
+
+<!-- Iltimos terminalda npm run dev deb ishga tushiring -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HouseHub</title>
+    <link rel="stylesheet" href="/public/style.css">
+    
+</head>
+<body>
+    <header>
+        <div class="header">
+            <div class="header-nav">
+                <div class="header-logo-wrap">
+                    <div class="header-img">
+                        <a href="./about"><img src="/public/img/sayt-logo.jpg" alt="logo"></a>
+                    </div>
+                    <h3>HouseHub</h3>
+                </div>
+                <ul>
+                    <li><a href="/ijara">Ijara</a></li>
+                    <li><a href="/sotuv">Sotuv</a></li>
+                    <li><a href="/sig-in">Login</a></li>
+                    <li><a href="/sign-up">Sign Up</a></li>
+                </ul>
+            </div>
+            <h1 class="header-text">Welcome to HouseHub</h1>
+            <form id="searchForm" class="header-form" action="/qidiruv" method="get">
+                <label for="search">Search</label>
+                <input type="text" id="search" name="search" placeholder="Enter district to search">
+                <button type="submit">Send</button>
+            </form>
+            <div id="error-message" class="error-message"></div>
+        </div>
+    </header>
+    <main>
+        <div id="results" class="main-card-wrap">
+
+        </div>
+    </main>
+    <footer></footer>
+
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const searchInput = document.getElementById('search')
+            const searchQuery = searchInput.value
+            fetch(`/qidiruv?search=${encodeURIComponent(searchQuery)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const resultsDiv = document.getElementById('results');
+                    const errorMessageDiv = document.getElementById('error-message');
+                    resultsDiv.innerHTML = ''; 
+                    errorMessageDiv.innerHTML = '';
+                    searchInput.value = ""
+                    
+                    if (data.length === 0) {
+                        errorMessageDiv.innerHTML = 'Malumot topilmadi yoki qayta urinib koring';
+                    } else {
+                        data.forEach(house => {
+                            const houseDiv = document.createElement('div');
+                            houseDiv.classList.add('main-card');
+                            houseDiv.innerHTML = `
+                                <div class="label ${house.to_give === 'ijara' ? 'ijara' : 'sotuv'}">${house.to_give}</div>
+                                <p>Images: ${house.images}</p>
+                                <hr>
+                                <h3>Title: ${house.title}</h3>
+                                <p>Price: ${house.price}</p>
+                                <p>${house.type ? 'Hovli uy' : 'Dom'}</p>
+                                <p>Rating: ${house.rating}</p>
+                            `;
+                            resultsDiv.appendChild(houseDiv);
+                        });
+                    }
+                })
+                .catch(error => {
+                    errorMessageDiv.innerHTML = 'Xatolik yuz berdi, iltimos qayta urinib koring';
+                });
+        });
+    </script>
+</body>
+</html>
