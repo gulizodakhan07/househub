@@ -1,5 +1,4 @@
 
-
 export const ErrorHandlerMiddleware = (err, _, res, __) => {
   
     console.log(err)
