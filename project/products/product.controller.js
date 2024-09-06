@@ -4,7 +4,6 @@ class ProductController {
     #_product
     constructor(){
         this.#_product = Products
-
     }
     getAllProducts = async(req,res,next)=>{
         try {
