@@ -1,3 +1,4 @@
+import { upload } from "../utils/multer.utils.js";
 import { Products } from "./product.model.js"
 
 class ProductController {
@@ -33,11 +34,33 @@ class ProductController {
         }
     }
     createProduct(req,res,next){
-        try{
+        upload.array('images',10)(req,res, async (err)=>{
+            if(err){
+                next(err)
+            }
+            try{
+                const {title,price,number_of_rooms,address,material,rating,to_give} = req.body
+                const images = req.files.map(file => file.path)
+                const newProduct = await this.#_product.create({
+                    title,
+                    price,
+                    image_url: images,
+                    number_of_rooms,
+                    address,
+                    material,
+                    rating,
+                    to_give
+                })
+                res.status(201).send({
+                    message: "Product created successfully!",
+                    data: newProduct
+                })
 
-        }catch(err){
-            next(err)
-        }
+            }catch(err){
+                next(err)
+            }
+        })
+        
     }
     updateProduct(req,res,next){
         try{
