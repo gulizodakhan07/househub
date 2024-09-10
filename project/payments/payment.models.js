@@ -1,14 +1,14 @@
-import { Schema, model } from "mongoose";
+import mongoose from "mongoose";
 
 // Payment Schema
-const paymentSchema = new Schema({
+const paymentSchema = new mongoose.Schema({
     user: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
     product: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Products',
         required: true
     },
@@ -28,4 +28,6 @@ const paymentSchema = new Schema({
     }
 });
 
-export const Payment = model('Payment', paymentSchema);
+export const Payment = mongoose.model('Payment', paymentSchema);
+
+

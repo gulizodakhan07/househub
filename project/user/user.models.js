@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-const userScchema = new Schema({
+const userSchema = new Schema({
     first_name: {
         type: String,
         required: true
@@ -26,13 +26,12 @@ const userScchema = new Schema({
         required: true
     },
     role: {
-        enum:{
-            values: ["admin","super-admin","user"]
-        }
+        enum: ["admin","super-admin","user"]
+        
     }
 },
 {
     timestamps: true
 }
 )
-export const User = model("user",userScchema)
+export const User = model("user",userSchema)

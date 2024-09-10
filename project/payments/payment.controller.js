@@ -1,20 +1,46 @@
+import { BadRequestException } from "../exception/badRequest.exception.js";
+import { NotFoundException } from "../exception/notFound.exception.js";
+import { Products } from "../products/product.model.js";
+import { User } from "../user/user.models.js";
 import { Payment } from "./payment.models.js";
 
 class PaymentController {
+    #_user
+    #_product
+    #_payment
+    constructor(){
+        this.#_payment = Payment
+        this.#_product = Products
+        this.#_user = User
+    }
     createPayment = async (req, res, next) => {
         try {
-            const { user, product, amount } = req.body;
+            const {userId,productId,amount} = req.body
+            const user = await this.#_user.findById(userId)
+            const product = await this.#_product.findById(productId)
+            if(!user){
+                throw new NotFoundException("User not found!")
+            }
+            if(!product){
+                throw new NotFoundException("Product not found!")
+            }
+            const productPrice = product.price
+            if(amount < productPrice){
+                throw new BadRequestException("You must pay in full")
+            }
 
-            const newPayment = await Payment.create({
-                user,
-                product,
-                amount
-            });
-
+            const newPayment = await this.#_payment.create({
+                user: userId,
+                product: productId,
+                amount,
+                status: 'completed'
+            })
             res.status(201).send({
-                message: "Payment created successfully",
-                data: newPayment,
-            });
+                statusCode: 201,
+                message: "Payment created successfully!",
+                payment: newPayment
+            })
+            
         } catch (err) {
             next(err);
         }
@@ -22,10 +48,9 @@ class PaymentController {
 
     getAllPayments = async (req, res, next) => {
         try {
-            const payments = await Payment.find()
-                .populate('user', 'name email') 
+            const payments = await this.#_payment.find()
+                .populate('user', 'first_name email') 
                 .populate('product', 'title price')
-
             res.send({
                 message: "success",
                 data: payments,
@@ -34,26 +59,25 @@ class PaymentController {
             next(err);
         }
     };
-
-    updatePaymentStatus = async (req, res, next) => {
-        try {
-            const { status } = req.body;
-            const updatedPayment = await Payment.findByIdAndUpdate(
-                req.params.id,
-                { status },
-                { new: true, runValidators: true }
-            );
-            if (!updatedPayment) {
-                return res.status(404).send({ message: "Payment not found" });
+    deletePayment = async (req,res,next) =>{
+        try{
+            const {paymentId} = req.params
+            const deletedPayment = await this.#_payment.findById(paymentId)
+            if(!deletedPayment){
+                throw new NotFoundException("Payment not found!")
             }
-            res.send({
-                message: "Payment status updated successfully",
-                data: updatedPayment,
-            });
-        } catch (err) {
-            next(err);
+            const result = await this.#_payment.findByIdAndDelete(paymentId)
+            res.status(200).send({
+                statusCode: 200,
+                message: "Payment deleted successfully!",
+                deleted: result
+            })
+
+        }catch(err){
+            next(err)
         }
-    };
+    }
+
 }
 
 export default new PaymentController();

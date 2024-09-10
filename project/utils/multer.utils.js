@@ -7,8 +7,8 @@ const storage = multer.diskStorage({
         cb(null,Date.now() + '-' + file.originalname)
     }
 })
-const filterFile = (req,file,cb)=>{
-    if(file.mimetype.startsWith('images')){
+const fileFilter = (req,file,cb)=>{
+    if(file.mimetype.startsWith('image/')){
         cb(null,true)
     }else{
         cb(new Error('Only image file are allowed!'),false)
@@ -16,5 +16,5 @@ const filterFile = (req,file,cb)=>{
 }
 export const upload = multer({
     storage: storage,
-    fileFilter: filterFile
+    fileFilter: fileFilter
 })
