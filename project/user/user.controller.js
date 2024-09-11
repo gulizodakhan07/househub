@@ -47,7 +47,6 @@ class UserController {
             if (error) {
                 return res.status(406).send({ message: error.details });
             }
-
             const { first_name, last_name, email, phone_number, username, password, role } = value;
 
             const check_email = await this.#_model.findOne({ email });

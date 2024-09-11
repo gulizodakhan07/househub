@@ -7,6 +7,7 @@ import { ConflictException } from '../exception/conflict.exception.js'
 import { sendEmail } from '../utils/send-email.utils.js'
 import { config } from 'dotenv';
 config()
+import { hash } from 'bcrypt'
 
 class AuthController {
     #_model
@@ -34,22 +35,23 @@ class AuthController {
     }
     resetPassword = async (req, res) => {
         const { newPassword } = req.body
-        const { token } = req.params
-        const user = await this.#_model.findOne({ passwordResetToken: token })
+        const { password_token } = req.params;
+        const user = await this.#_model.findOne({ passwordResetToken: password_token })
         if (!user) {
             throw new NotFoundException("User not found")
         }
-        if (user.passwordResetExpireTime - Date.now() < 0) {
+        if (user.passwordResetTokenExpireTime - Date.now() < 0) {
             throw new ConflictException("Password reset token has expired")
         }
-        const hashed_pass = hash(newPassword, 10)
-        await this.#_model.findByIdAndUpdate({
+        const hashed_pass = await hash(newPassword, 7)
+        await this.#_model.findByIdAndUpdate(user._id, {
             password: hashed_pass,
             passwordResetToken: null,
             passwordResetTokenExpireTime: null,
         })
         res.status(200).send({ message: "Password successfully reset" })
     }
+
     forgotPassword = async (req, res) => {
         const { email } = req.body
         const user = await this.#_model.findOne({ email })

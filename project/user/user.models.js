@@ -13,7 +13,7 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
-    email:{
+    email: {
         type: String,
         required: true
     },
@@ -21,17 +21,22 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
-    password:{
+    password: {
         type: String,
         required: true
     },
     role: {
-        enum: ["admin","super-admin","user"]
-        
-    }
+        enum: ["admin", "super-admin", "user"]
+    },
+    passwordResetToken: {
+        type: String,
+    },
+    passwordResetTokenExpireTime: {
+        type: Date,
+    },
 },
-{
-    timestamps: true
-}
+    {
+        timestamps: true
+    }
 )
-export const User = model("user",userSchema)
+export const User = model("user", userSchema)

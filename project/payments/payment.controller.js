@@ -49,8 +49,9 @@ class PaymentController {
     getAllPayments = async (req, res, next) => {
         try {
             const payments = await this.#_payment.find()
-                .populate('user', 'first_name email') 
-                .populate('product', 'title price')
+                .populate('user') 
+                .populate('product')
+
             res.send({
                 message: "success",
                 data: payments,
@@ -63,9 +64,12 @@ class PaymentController {
         try{
             const {paymentId} = req.params
             const deletedPayment = await this.#_payment.findById(paymentId)
+
             if(!deletedPayment){
                 throw new NotFoundException("Payment not found!")
             }
+
+
             const result = await this.#_payment.findByIdAndDelete(paymentId)
             res.status(200).send({
                 statusCode: 200,

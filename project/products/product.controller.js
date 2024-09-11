@@ -8,6 +8,25 @@ class ProductController {
     constructor() {
         this.#_product = Products
     }
+    getHomePages = async(req,res,next)=>{
+        try{
+            const sales = await this.#_product.find({to_give: 'sotuv'}).limit(4)
+            const rentals = await this.#_product.find({to_give: 'ijara'}).limit(4)
+            const cheapestHomes = await this.#_product.find({to_give: 'sotuv'}).sort({price: 1}).limit(4)
+            const topRatedHomes = await this.#_product.find({to_give: 'sotuv'}).sort({rating: -1}).limit(4)
+            res.render('home',{
+                sales,
+                rentals,
+                cheapestHomes,
+                topRatedHomes
+            })
+
+
+
+        }catch(err){
+            next(err)
+        }
+    }
     getAllProducts = async (req, res, next)=>{
         try {
             const query = { ...req.query };
