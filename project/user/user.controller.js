@@ -53,11 +53,15 @@ class UserController {
             if (check_email) {
                 return res.status(409).send({ message: "Email already exists!" });
             }
-
             const check_username = await this.#_model.findOne({ username });
             if (check_username) {
                 return res.status(409).send({ message: "Username already exists!" });
             }
+            const check_phone = await this.#_model.findOne({ phone_number });
+            if (check_phone) {
+                return res.status(409).send({ message: "Phone number already exists!" });
+            }
+
 
             const hashed_password = await bcrypt.hash(password, 12);
             const new_user = await this.#_model.create({

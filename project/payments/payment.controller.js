@@ -68,8 +68,6 @@ class PaymentController {
             if(!deletedPayment){
                 throw new NotFoundException("Payment not found!")
             }
-
-
             const result = await this.#_payment.findByIdAndDelete(paymentId)
             res.status(200).send({
                 statusCode: 200,

@@ -5,6 +5,8 @@ import { upload } from "../utils/multer.utils.js";
 import ValidationMiddleWare from "../middleware/validation.middleware.js";
 import { UpdateProductSchema } from "./dtos/update-product.dto.js";
 import { CreateProductSchema } from "./dtos/create-product.dto.js";
+import { CheckAuthGuard } from "../guards/checkAuth.guard.js";
+import { CheckRolesGuard } from "../guards/checkRole.guards.js";
 export const houseRoutes = Router()
     .get('/',productController.getHomePages)
     .get('/all',productController.getAllProducts)

@@ -1,6 +1,7 @@
 import Joi from 'joi';
 
 export const CreateProductSchema = Joi.object({
+    user: Joi.string(),
     title: Joi.string().min(3).max(100).required(),
     price: Joi.number().positive().required(),
     image_url: Joi.string().uri().optional(),

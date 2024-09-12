@@ -58,9 +58,6 @@ class ProductController {
         try {
             const { user, title, price, number_of_rooms, address, material, rating, to_give } = req.body
             const images = req.files ? req.files.map(file => file.filename) : []
-            
-            
-
             const newProduct = await this.#_product.create({
                 user,
                 title,
