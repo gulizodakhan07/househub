@@ -34,6 +34,7 @@ class UserController {
                 page: req.query?.page || 0,
                 limit: req.query?.limit || 10,
                 results: result,
+                
                 data: filteredUsersResult,
             });
         } catch (err) {

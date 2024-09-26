@@ -35,8 +35,8 @@ class AuthController {
     }
     resetPassword = async (req, res) => {
         const { newPassword } = req.body
-        const { password_token } = req.params;
-        const user = await this.#_model.findOne({ passwordResetToken: password_token })
+        const { token } = req.params;
+        const user = await this.#_model.findOne({ passwordResetToken: token })
         if (!user) {
             throw new NotFoundException("User not found")
         }
@@ -72,6 +72,7 @@ class AuthController {
             passwordResetToken: resetToken,
             passwordResetTokenExpireTime: Date.now() + 3600000
         });
+        res.render('pages/forgotPassword', { message: "Email has been sent!" });
 
         return res.status(200).send({ message: "Password reset link sent to your email", password: newPassword })
     }

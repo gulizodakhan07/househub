@@ -3,16 +3,15 @@ import mongoose from "mongoose";
 // Payment Schema
 const paymentSchema = new mongoose.Schema({
     user: {
-        type: mongoose.SchemaTypes.ObjectId,
-        ref: 'user',
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     },
     product: {
-        type: mongoose.SchemaTypes.ObjectId,
-        ref: 'products',
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Products',
         required: true
     },
-
     amount: {
         type: Number,
         required: true
@@ -21,6 +20,15 @@ const paymentSchema = new mongoose.Schema({
         type: String,
         enum: ['pending', 'completed', 'failed'],
         default: 'pending'
+    },
+    type: {
+        type: String,
+        enum: ['top_listing', 'other'], // top_listing to'g'ridan-to'g'ri sotuv uchun emas, reklamani ko'tarish uchun
+        required: true
+    },
+    duration: {
+        type: Number,
+        default: 7 
     },
     paymentDate: {
         type: Date,
