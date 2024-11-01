@@ -31,7 +31,14 @@ class AuthController {
                 expiresIn: process.env.JWT_EXPIRE_TIME
             }
         )
-        res.status(200).send({ message: "Successfully signed in", accessToken })
+        const refreshToken = jwt.sign(
+            { id: user._id },
+            process.env.REFRESH_TOKEN_SECRET, {
+            expiresIn: process.env.REFRESH_TOKEN,
+        });
+
+
+        res.status(200).send({ message: "Successfully signed in", accessToken,refreshToken })
     }
     resetPassword = async (req, res) => {
         const { newPassword } = req.body

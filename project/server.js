@@ -1,4 +1,3 @@
-// Iltimos terminalda npm run dev deb ishga tushiring
 import bodyParser from "body-parser";
 import express from "express";
 import { engine } from "express-handlebars"
@@ -53,33 +52,6 @@ app.get('/rentals', (req, res) => {
 // Forgot Password
 app.get('/forgot-password', (req, res) => {
   res.render('pages/forgot-password', { title: 'Forgot Password' });
-});
-
-app.post('/add-listing', upload.array('images', 10), (req, res) => {
-  const { title, description, price } = req.body;
-  let products = []
-
-  // Narxni tekshirish
-  if (!title || !description || !price || isNaN(price) || price <= 0) {
-      return res.status(400).render('add-listing', {
-          errorMessage: 'All fields are required and price must be a valid number greater than 0.',
-      });
-  }
-
-  // Yangi mahsulotni yaratish
-  const newProduct = {
-      title,
-      description,
-      price: parseFloat(price),
-      images: req.files.map(file => file.path), // Rasmlar manzilini olish
-      createdAt: new Date().toISOString() // Yaratilgan vaqt
-  };
-
-  // Mahsulotni saqlash (ro'yxatga qo'shish)
-  products.push(newProduct); // Mahsulotni ro'yxatga qo'shish
-
-  console.log(products); // Mahsulotlarni konsolga chiqarish
-  res.redirect('/'); // Bosh sahifaga qaytish
 });
 
 

@@ -4,4 +4,4 @@ export class BaseException extends Error {
       this.isException = true;
     }
   }
-  
+  export default new BaseException()

@@ -61,12 +61,22 @@ class AdsController {
                 ad.isTopListing = false; 
                 await ad.save();
 
-                // Foydalanuvchiga email jo'natish
-                await sendEmail({
-                    to: ad.user.email,
-                    subject: 'Reklamangiz muddati tugadi',
-                    text: `Sizning ${product.title} mahsulotingiz reklama muddati tugadi.`,
-                });
+                // await sendEmail({
+                //     to: ad.user.email,
+                //     subject: 'Reklamangiz muddati tugadi',
+                //     text: `Sizning ${product.title} mahsulotingiz reklama muddati tugadi.`,
+                // });
+                // menga refresh tokenni funksiyasini tuzib qayerda ishlatilishini korsatib ber
+                if (ad.user && ad.user.email) {
+                    await sendEmail({
+                        to: ad.user.email,
+                        subject: 'Reklamangiz muddati tugadi',
+                        text: `Sizning ${product.title} mahsulotingiz reklama muddati tugadi.`,
+                    });
+                    console.log(ad.user.email);
+                } else {
+                    console.error('User email not found for ad:', ad._id);
+                }
                 console.log(ad.user.email)
             }
 
